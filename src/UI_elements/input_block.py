@@ -19,7 +19,7 @@ class InputBlock:
         print("building GUI input block [" + self.title + "]")
         
         #creates the tkinter Frame object holding the label frame and entry_fields_labels frame
-        self.main_frame = tk.Frame(self.master_frame, relief = tk.GROOVE, bd = 3, padx = 5, pady = 10)
+        self.main_frame = tk.Frame(self.master_frame, relief = tk.GROOVE, bd = 3)
         
         #create the frame holding the titlem part of the input block main frame
         self.build_label_frame()
@@ -27,7 +27,7 @@ class InputBlock:
         
         #creates a grid frame as a part of the main frame, grid layout is 3 columns wide
         #holds the entry rows with the following column sequence: Left description label, middle entry field, right status label
-        self.entry_frame = tk.Frame(self.main_frame, padx = 5, pady = 5, relief = tk.GROOVE, bd = 2)
+        self.entry_frame = tk.Frame(self.main_frame)
         self.build_entry_fields()
         self.build_buttons()
         self.entry_frame.pack()
@@ -37,8 +37,8 @@ class InputBlock:
         print("creating title frame for " + self.title)
         
         #create a label for a title of this view in a sub-frame
-        self.title_frame = tk.Frame(self.main_frame, relief = tk.GROOVE, bd = 2)
-        tk.Label(self.title_frame, text = self.title, font = "Helvetica 16 bold", padx = 5, pady = 5).pack()
+        self.title_frame = tk.Frame(self.main_frame)
+        tk.Label(self.title_frame, text = self.title, font = "Helvetica 16 bold", pady = 5).pack()
     
     #builds the entry fields and respective label widgets, and stores them in a dict {variable_object, widget}
     def build_entry_fields(self):

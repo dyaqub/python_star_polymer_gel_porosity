@@ -38,17 +38,18 @@ class CalculationController:
         
     
     #creates an empty plot to be shown before variables are loaded
+    #TODO: transfer to plot_frame UI element
     def create_empty_Mc_plot(self):
         #creates the matplotlib figure, figsize=(width, height) in unknown units
-        Mc_plot_figure = matplotlib.figure.Figure(figsize=(7, 4), dpi=100)
+        Mc_plot_figure = matplotlib.figure.Figure(figsize=(5, 3), dpi=100)
+        Mc_plot_figure.subplots_adjust(bottom = 0.15, left = 0.2)
+        
         #adds a subplot to the figure
         Mc_plot = Mc_plot_figure.add_subplot(111)
-        Mc_plot.set_ylim([0,0.02])
-        Mc_plot.set_xlim([0, 20000])
-        #sets the range?
-        self.Mc_range = numpy.arange(0.0, 20000.0, 1)
+        Mc_plot.set_ylim([0,0.002])
+        Mc_plot.set_xlim([0, 40000])
         
-        Mc_plot.set_title('Corssing lines (continuous) are solutions for Mc')
+        Mc_plot.set_title('Crossing lines (continuous) are solutions for Mc')
         Mc_plot.set_xlabel('Mc [g/mol]')
         Mc_plot.set_ylabel('1/Mc [mol/g]')
         
@@ -57,12 +58,17 @@ class CalculationController:
     #updates the plot
     def update_plot(self):
         self.load_variables()
+        #sets the range
+        self.Mc_range = numpy.arange(0.0, self.Ma+5000, 1)
         
         #creates the matplotlib figure, figsize=(width, height) in unknown units
-        Mc_plot_figure = matplotlib.figure.Figure(figsize=(7, 4), dpi=100)
+        Mc_plot_figure = matplotlib.figure.Figure(figsize=(5, 3), dpi=100)
+        Mc_plot_figure.subplots_adjust(bottom = 0.15, left = 0.2)
+        
         #adds a subplot to the figure
         Mc_plot = Mc_plot_figure.add_subplot(111)
-        Mc_plot.set_ylim([0,0.001])
+        Mc_plot.set_ylim([0,0.002])
+        Mc_plot.set_xlim([0, self.Ma+5000])
         
         #left side
         equation_left = 1.0/self.Mc_range
@@ -70,6 +76,7 @@ class CalculationController:
         equation_right = 1.0/self.Ma - (self.vp/(self.v2r*self.V1)) * ( self.X*self.v2s*self.v2s + numpy.log(1.0-self.v2s) + self.v2s ) /(
                          (self.v2s/self.v2r)**(1.0/3.0) - ((2.0/self.F1) + 1.0/((self.Ma/self.Mc_range-1)*self.F2))*(self.v2s/self.v2r) )
         #may throw a RunTimeWarning - divide by zero, safe to ignore
+        print("solving the equation may have throw a Runtime warning - divide by zero. This is safe to ignore")
         
         Mc_plot.plot(self.Mc_range, equation_left)
         Mc_plot.plot(self.Mc_range, equation_right)

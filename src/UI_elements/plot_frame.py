@@ -60,7 +60,7 @@ class PlotFrame:
         tk.Label(self.results_frame, text = "mesh size").grid(column = 0, row = 2)
         
         tk.Label(self.results_frame, text = "[g/mol]").grid(column = 2, row = 0)
-        tk.Label(self.results_frame, text = "[nm] ?").grid(column = 2, row = 1)
+        tk.Label(self.results_frame, text = "[nm]").grid(column = 2, row = 1)
         tk.Label(self.results_frame, text = "[nm]").grid(column = 2, row = 2)
         
         self.label_Mc = tk.Label(self.results_frame)
