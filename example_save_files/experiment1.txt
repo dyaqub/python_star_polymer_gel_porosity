@@ -1,0 +1,3 @@
+Experimental Swelling
+polymer volume fraction equilibrium=0.012
+polymer volume fraction synthesis=0.016

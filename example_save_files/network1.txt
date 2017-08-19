@@ -1,0 +1,4 @@
+Network Architecture
+arm molecular weight=10000.0
+degree of crosslinking in arm=2.0
+degree of crosslinking in core=4.0

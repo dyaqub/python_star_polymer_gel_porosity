@@ -1,0 +1,7 @@
+Polymer Constants
+repeating unit MW=44.0
+average bond length=0.185
+characteristic ratio=4.0
+Flory parameter=0.436
+specific volume polymer=0.891
+swelling agent molar volume=18.0
