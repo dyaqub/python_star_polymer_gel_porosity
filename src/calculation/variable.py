@@ -7,12 +7,14 @@ from tkinter import messagebox # required for messagebox to work, even with tkin
 class Variable:
     #inits with all variables 0 (ints), 0.0 (doubles) or False (bools)
     #takes 
-    def __init__(self, name, unit):
+    def __init__(self, name, unit, lower_bound, upper_bound):
         print("creating variable [" + name + "]")
         
         self.valid = False
         self.name = name
         self.unit = unit
+        self.lower_bound = lower_bound
+        self.upper_bound = upper_bound
         
         self.entry = tk.DoubleVar()
         self.entry.set(0.0)
@@ -35,9 +37,16 @@ class Variable:
     def valid_input(self):
         #if the value of entry is not a double (also empty), calling .get() will raise a TclError
         try:
+            #if the input doesn't raise a TclError it is a double
             self.entry.get()
-            #if the input doesn't raise a TclError it's a double
-            return True
+            
+            #check if the value is in bounds, return True if it is otherwise raise error message and return false
+            if self.value_in_bounds(self.entry.get()):
+                return True
+            else:
+                tk.messagebox.showerror("Variable error", "The input for [" + self.name + "] is out of bounds")
+                self.valid = False
+                self.error.set("out of bounds")
         #if this happens print to the console and throw a GIU popup warning
         #set valid to false, the status error message to "invalid input" and return False
         except tk.TclError:
@@ -46,3 +55,10 @@ class Variable:
             self.error.set("invalid input")
             tk.messagebox.showerror("Variable error", "The input for [" + self.name + "] is invalid")
             return False
+        
+    def value_in_bounds(self, value):
+        if value < self.lower_bound or value > self.upper_bound:
+            return False
+        else: 
+            return True
+        

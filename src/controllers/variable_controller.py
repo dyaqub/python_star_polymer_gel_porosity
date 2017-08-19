@@ -22,19 +22,19 @@ class VariableController:
     def create_variables(self):
         print("creating variables")
         
-        self.polymer_constant_variables = {"repeating unit MW" : var.Variable("repeating unit MW", "g/mol"),
-                                           "average bond length" : var.Variable("average bond length", "nm"),
-                                           "characteristic ratio": var.Variable("characteristic ratio", " ? "),
-                                           "Flory parameter" : var.Variable("Flory parameter", " ? "),
-                                           "specific volume polymer" : var.Variable("specific volume polymer", "mL/g"),
-                                           "swelling agent molar volume" : var.Variable("swelling agent molar volume", "mL/mol")}
+        self.polymer_constant_variables = {"repeating unit MW" : var.Variable("repeating unit MW", "g/mol", 1.0, 1000000.0),
+                                           "average bond length" : var.Variable("average bond length", "nm", 0.05, 10.0),
+                                           "characteristic ratio": var.Variable("characteristic ratio", " ? ", 0.1, 1000.0),
+                                           "Flory parameter" : var.Variable("Flory parameter", " ? ", 0.01, 1000.0),
+                                           "specific volume polymer" : var.Variable("specific volume polymer", "mL/g", 0.01, 100.0),
+                                           "swelling agent molar volume" : var.Variable("swelling agent molar volume", "mL/mol", 0.1, 1000000.0)}
         
-        self.network_architecture_variables = {"arm molecular weight" : var.Variable("arm molecular weight", "g/mol"),
-                                               "degree of crosslinking in arm" : var.Variable("degree of crosslinking in arm", " - "),
-                                               "degree of crosslinking in core" : var.Variable("degree of crosslinking in core", " - ")}
+        self.network_architecture_variables = {"arm molecular weight" : var.Variable("arm molecular weight", "g/mol", 1.0, 1000000000.0),
+                                               "degree of crosslinking in arm" : var.Variable("degree of crosslinking in arm", " - ", 0.01, 1000000.0),
+                                               "degree of crosslinking in core" : var.Variable("degree of crosslinking in core", " - ", 0.01, 100000.0)}
         
-        self.experimental_swelling_variables = {"polymer volume fraction equilibrium" : var.Variable("polymer volume fraction equilibrium", " - "),
-                                                "polymer volume fraction synthesis" : var.Variable("polymer volume fraction synthesis", " - ")}
+        self.experimental_swelling_variables = {"polymer volume fraction equilibrium" : var.Variable("polymer volume fraction equilibrium", " - ", 0.0000001, 1.0),
+                                                "polymer volume fraction synthesis" : var.Variable("polymer volume fraction synthesis", " - ", 0.0000001, 1.0)}
         
         #dictionary links variable dict titles to the variable dict containing the variable object instances (ditionary of dictionaries)
         self.variable_dicts = {"Polymer Constants" : self.polymer_constant_variables,
@@ -44,8 +44,6 @@ class VariableController:
     #validates the current entries (actual validation with error handling is done by variable class), and changes the labels accordingly (both value and color)
     def update_variable_list(self, variable_dict_title, status_label_widgets_dict):
         print("\nUpdating variable list [" + variable_dict_title + "]:")
-        
-        all_valid = True # returned by the method, set to false if any invalid vars are encountered
         
         #iterates through all variable objects, checks if the input is valid and in bounds, and updates the status label accordingly
         for variable_name, variable_object in self.variable_dicts[variable_dict_title].items():
@@ -63,9 +61,22 @@ class VariableController:
             else:
                 variable_object.valid = False
                 status_label_widget.configure(textvariable = variable_object.error, fg = "red")
-                all_valid = False
+
+    #returns true if all variable objects in all variable dictionaries have True .valid attributes, False otherwise
+    def all_variables_valid(self):
+        print("checking if all variables are valid")
         
-        return all_valid # returns true if all variable objects are valid, false otherwise
+        #iterates through all variable dictionaries, then all variables and returns False if one object has a False .valid attribute
+        for dict_name, variable_dict in self.variable_dicts.items():
+            
+            for variable_name, variable_object in variable_dict.items():
+                
+                if not variable_object.valid:
+                    print("variable [" + variable_name + "] is not valid")
+                    return False
+        
+        print("all variables valid")
+        return True
     
     #takes the title of the variable list as a parameter
     #saves the respective variable list to a file if all variable objects are valid, otherwise returns False

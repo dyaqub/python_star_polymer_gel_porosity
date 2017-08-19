@@ -1,5 +1,6 @@
 import matplotlib.backends.backend_tkagg
 import tkinter as tk
+from tkinter import messagebox # required for messagebox to work, even with tkinter/tk.messagebox as messagebox import isn't part of tkinter __init__
 
 #responsible for building the UI elements surrounding the Mc equation plot
 #has access to the calculation controller from which the actual plot is retrieved (calc_controller has access to all variables and holds calculation methods)
@@ -76,6 +77,14 @@ class PlotFrame:
     
     #update
     def update_plot(self):
+        print("updating plot")
+        
+        #raise an error and cancel if not all variable objects have a valid value
+        if not self.calc_controller.var_controller.all_variables_valid():
+            print("not all variables valid, cancelling plot and results update")
+            tk.messagebox.showerror("Variable error", "Not all current variable values are valid.")
+            return False
+        
         #the calc controller is responsible for actually creating the plot        
         self.Mc_plot_figure = self.calc_controller.update_plot()
         
@@ -85,11 +94,14 @@ class PlotFrame:
         self.canvas.show()
         self.canvas.get_tk_widget().pack()
         self.canvas._tkcanvas.pack()
-        
+
+        #update the results calculation and values        
         self.update_results()
         
     #updates the results labels
     def update_results(self):
+        print("updating results")
+        
         #convert floating point numbers to two decimals
         Mc_str = "%.2f" % self.calc_controller.real_Mc
         r0_str = "%.2f" % self.calc_controller.r0_average

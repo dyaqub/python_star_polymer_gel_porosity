@@ -161,16 +161,10 @@ class CalculationController:
     def calculate_results(self):
         
         print("calculating r0_average")
-        print("bond length l = " + str(self.l))
-        print("MW between crosslinks Mc = " + str(self.real_Mc))
-        print("MW arm Mr = " + str(self.Mr))
-        print("characteristic ratio Cn = " + str(self.Cn))
         self.r0_average = self.l * ((2 * self.real_Mc / self.Mr)**0.5) * (self.Cn ** 0.5)
-        print("calculated r0 = " + str(self.r0_average))
+        print("calculated square-root-average end-to-end distance r0 = " + str(self.r0_average))
         
         print("calculating mesh size")        
-        print("swollen polymer vol fraction v2s = " + str(self.v2s))
-        print("end-to-end distance r0_average = " + str(self.r0_average))
         self.mesh_size = (self.v2s ** (-1.0/3.0)) * self.r0_average
         print("calculated mesh size = " + str(self.mesh_size))
         
