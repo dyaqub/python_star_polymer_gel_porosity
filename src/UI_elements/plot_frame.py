@@ -6,12 +6,14 @@ import tkinter as tk
 class PlotFrame:
     
     def __init__(self, master, calc_controller):
+        matplotlib.rcParams.update({'font.size': 8})
+        
         #set the tk root to that passed by the UI controller
         self.master = master
         self.calc_controller = calc_controller
         
         #create the main frame for the plot
-        self.main_frame = tk.Frame(master, relief = tk.GROOVE, bd = 3, padx = 10, pady = 10)
+        self.main_frame = tk.Frame(master, relief = tk.GROOVE, bd = 3)
         
         #build and pack the title subframe
         #self.build_title_frame()
@@ -53,7 +55,7 @@ class PlotFrame:
         self.update_button.pack(pady = 5)
     
     def build_results_grid(self):
-        self.results_frame = tk.Frame(self.main_frame)
+        self.results_frame = tk.Frame(self.main_frame, relief = tk.GROOVE, bd = 3)
         
         tk.Label(self.results_frame, text = "Molecular weight between crosslinks").grid(column = 0, row = 0)
         tk.Label(self.results_frame, text = "square-root average end-to-end distance").grid(column = 0, row = 1)
@@ -70,7 +72,7 @@ class PlotFrame:
         self.label_r0.grid(column = 1, row = 1)
         self.label_mesh_size.grid(column = 1, row = 2)
         
-        self.results_frame.pack(pady = 10)
+        self.results_frame.pack(fill = tk.X)
     
     #update
     def update_plot(self):

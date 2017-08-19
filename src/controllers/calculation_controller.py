@@ -3,6 +3,7 @@ from sympy.abc import x
 import matplotlib
 import numpy
 
+
 class CalculationController:
     
     def __init__(self, var_controller):
@@ -41,17 +42,19 @@ class CalculationController:
     #TODO: transfer to plot_frame UI element
     def create_empty_Mc_plot(self):
         #creates the matplotlib figure, figsize=(width, height) in unknown units
-        Mc_plot_figure = matplotlib.figure.Figure(figsize=(5, 3), dpi=100)
-        Mc_plot_figure.subplots_adjust(bottom = 0.15, left = 0.2)
+        Mc_plot_figure = matplotlib.figure.Figure(figsize=(5, 3), dpi=100)    
         
         #adds a subplot to the figure
         Mc_plot = Mc_plot_figure.add_subplot(111)
         Mc_plot.set_ylim([0,0.002])
         Mc_plot.set_xlim([0, 40000])
+        Mc_plot.tick_params(labelsize=6)
         
-        Mc_plot.set_title('Crossing lines (continuous) are solutions for Mc')
         Mc_plot.set_xlabel('Mc [g/mol]')
         Mc_plot.set_ylabel('1/Mc [mol/g]')
+        
+        #trims white edges from the plot figure. Note that .set_tight_layout(true) is preferable to .tight_layout(), which can only use the Agg renderer and throws a warning
+        Mc_plot_figure.set_tight_layout(True)
         
         return Mc_plot_figure
     
@@ -63,7 +66,6 @@ class CalculationController:
         
         #creates the matplotlib figure, figsize=(width, height) in unknown units
         Mc_plot_figure = matplotlib.figure.Figure(figsize=(5, 3), dpi=100)
-        Mc_plot_figure.subplots_adjust(bottom = 0.15, left = 0.2)
         
         #adds a subplot to the figure
         Mc_plot = Mc_plot_figure.add_subplot(111)
@@ -81,13 +83,13 @@ class CalculationController:
         Mc_plot.plot(self.Mc_range, equation_left)
         Mc_plot.plot(self.Mc_range, equation_right)
         
-        Mc_plot.set_title('Corssing lines (continuous) are solutions for Mc')
         Mc_plot.set_xlabel('Mc [g/mol]')
         Mc_plot.set_ylabel('1/Mc [mol/g]')
         
         self.solve_for_Mc()
         self.calculate_results()
         
+        Mc_plot_figure.set_tight_layout(True)
         return Mc_plot_figure
     
     #create the plot showing the Mc equation using the matplotlib module
