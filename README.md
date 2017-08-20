@@ -2,6 +2,8 @@
 -------------
 This program simplifies and visualizes the calculation of porosity information for crosslinked star polymers gels. It outputs the **molecular weight between crosslinks M<sub>c</sub> [g/mol]** and the **mesh size &xi; [nm]**. The required inputs are information about the swelling of the polymer during synthesis and in equilibrium, information about the network architecture/topology and several polymer and swelling agent constants. Specific sets of polymer constants, network architectures and swelling experiments can be saved and loaded as .txt files. 
 
+![screenshot](https://user-images.githubusercontent.com/14539781/29494753-7aeeb278-85b1-11e7-8cce-c3613ee11b1e.JPG)
+
 ----------
 How do I run the program?
 -------------
