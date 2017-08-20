@@ -15,8 +15,9 @@ Program features:
 
 Notes for developers:
     - git version control is used
-    - development takes place on the master branch, stable versions are pushed to remote from the release branch
-    - several early versions where pushed to remote from master
+    - development takes place from the master branch, with specific features branching from master
+    - feature branches are rebased from master, after which release is rebased using master
+    - stable versions are pushed to remote from the release branch
     
     - function calling and key function events are printed to the console for faster debugging
     
