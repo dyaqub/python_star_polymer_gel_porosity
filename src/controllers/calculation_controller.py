@@ -36,40 +36,13 @@ class CalculationController:
         
         self.v2s = self.swelling["polymer volume fraction equilibrium"].value.get()
         self.v2r = self.swelling["polymer volume fraction synthesis"].value.get()
-        
-    
-    #creates an empty plot to be shown before variables are loaded
-    #TODO: transfer to plot_frame UI element
-    def create_empty_Mc_plot(self):
-        #creates the matplotlib figure, figsize=(width, height) in unknown units
-        Mc_plot_figure = matplotlib.figure.Figure(figsize=(5, 3), dpi=100)    
-        
-        #adds a subplot to the figure
-        Mc_plot = Mc_plot_figure.add_subplot(111)
-        Mc_plot.set_ylim([0,0.002])
-        Mc_plot.set_xlim([0, 40000])
-        Mc_plot.tick_params(labelsize=6)
-        
-        Mc_plot.set_xlabel('Mc [g/mol]')
-        Mc_plot.set_ylabel('1/Mc [mol/g]')
-        
-        #trims white edges from the plot figure. Note that .set_tight_layout(true) is preferable to .tight_layout(), which can only use the Agg renderer and throws a warning
-        Mc_plot_figure.set_tight_layout(True)
-        
-        return Mc_plot_figure
     
     #updates the plot
-    def update_plot(self):
+    def add_graphs_to_plot(self, Mc_plot):
         self.load_variables()
         #sets the range
         self.Mc_range = numpy.arange(0.0, self.Ma+5000, 1)
         
-        #creates the matplotlib figure, figsize=(width, height) in unknown units
-        Mc_plot_figure = matplotlib.figure.Figure(figsize=(5, 3), dpi=100)
-        
-        #adds a subplot to the figure
-        Mc_plot = Mc_plot_figure.add_subplot(111)
-        Mc_plot.set_ylim([0,0.002])
         Mc_plot.set_xlim([0, self.Ma+5000])
         
         #left side
@@ -82,42 +55,6 @@ class CalculationController:
         
         Mc_plot.plot(self.Mc_range, equation_left)
         Mc_plot.plot(self.Mc_range, equation_right)
-        
-        Mc_plot.set_xlabel('Mc [g/mol]')
-        Mc_plot.set_ylabel('1/Mc [mol/g]')
-        
-        self.solve_for_Mc()
-        self.calculate_results()
-        
-        Mc_plot_figure.set_tight_layout(True)
-        return Mc_plot_figure
-    
-    #create the plot showing the Mc equation using the matplotlib module
-    def create_Mc_plot(self):
-    
-        #creates the matplotlib figure, figsize=(width, height) in unknown units
-        figure = matplotlib.figure.Figure(figsize=(7, 4), dpi=100)
-        #adds a subplot to the figure
-        a = figure.add_subplot(111)
-        a.set_ylim([0,0.001])
-        #sets the range?
-        Mc = numpy.arange(500.0, 20000.0, 1)
-        
-        #left side
-        equation_left = 1.0/Mc
-        #equation right side. Note that numpy .log = ln, whereas .log10 = log
-        equation_right = 1.0/self.Ma - (self.vp/(self.v2r*self.V1)) * ( self.X*self.v2s*self.v2s + numpy.log(1.0-self.v2s) + self.v2s ) /(
-                         (self.v2s/self.v2r)**(1.0/3.0) - ((2.0/self.F1) + 1.0/((self.Ma/Mc-1)*self.F2))*(self.v2s/self.v2r) )
-        #may throw a RunTimeWarning - divide by zero, safe to ignore
-
-        #plots the equations to the subplot
-        a.plot(Mc, equation_left)
-        a.plot(Mc, equation_right)
-        a.set_title('Corssing lines (continuous) are solutions for Mc')
-        a.set_xlabel('Mc [g/mol]')
-        a.set_ylabel('1/Mc [mol/g]')
-        
-        return figure
     
     #solve Mc values
     def solve_for_Mc(self):
@@ -134,6 +71,8 @@ class CalculationController:
         #    Note that it solves the equation for zero, thus 1/Mc (here Mc = x) moves to the right side of the equation as - 1/Mc
         #
         #    As nsolve only gives one solution, it is solved multiple times with different guess values, and the solutions are added to a list
+        #
+        #    The arm molecular weight is always a solution, but the smaller solution is the real one required for the calculation
         #
         ##################################################
         

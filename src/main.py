@@ -10,6 +10,7 @@ Program goals:
     - visualize Mc calculation using either numpy plot or own made plot based on tkinter canvas/polygons
     - ability to save and load constants and parameters into a YAML file
 """
+
 import tkinter as tk
 import controllers.UI_controller
 import controllers.variable_controller

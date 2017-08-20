@@ -40,7 +40,7 @@ class PlotFrame:
         self.plot_frame = tk.Frame(self.main_frame)
         
         #get the empty plot frame from the calculation controller and store as an instance attribute
-        self.Mc_plot_figure = self.calc_controller.create_empty_Mc_plot()
+        self.create_empty_Mc_plot()
         
         self.canvas = matplotlib.backends.backend_tkagg.FigureCanvasTkAgg(self.Mc_plot_figure, master = self.plot_frame)
         self.canvas.show()
@@ -52,7 +52,7 @@ class PlotFrame:
         self.button_frame = tk.Frame(self.main_frame)
         
         #creates the update button, which has the update method as a command
-        self.update_button = tk.Button(self.button_frame, text = "update plot and results", command = self.update_plot)
+        self.update_button = tk.Button(self.button_frame, text = "update plot and results", command = self.update_plot_and_results)
         self.update_button.pack(pady = 5)
     
     def build_results_grid(self):
@@ -74,9 +74,25 @@ class PlotFrame:
         self.label_mesh_size.grid(column = 1, row = 2)
         
         self.results_frame.pack(fill = tk.X)
-    
+        
+    def create_empty_Mc_plot(self):
+        #creates the matplotlib figure, figsize=(width, height) in unknown units
+        self.Mc_plot_figure = matplotlib.figure.Figure(figsize=(5, 3), dpi=100)    
+        
+        #adds a subplot to the figure
+        Mc_plot = self.Mc_plot_figure.add_subplot(111)
+        Mc_plot.set_ylim([0,0.002])
+        Mc_plot.set_xlim([0, 40000])
+        Mc_plot.tick_params(labelsize=6)
+        
+        Mc_plot.set_xlabel('Mc [g/mol]')
+        Mc_plot.set_ylabel('1/Mc [mol/g]')
+        
+        #trims white edges from the plot figure. Note that .set_tight_layout(true) is preferable to .tight_layout(), which can only use the Agg renderer and throws a warning
+        self.Mc_plot_figure.set_tight_layout(True)
+        
     #update
-    def update_plot(self):
+    def update_plot_and_results(self):
         print("updating plot")
         
         #raise an error and cancel if not all variable objects have a valid value
@@ -85,15 +101,8 @@ class PlotFrame:
             tk.messagebox.showerror("Variable error", "Not all current variable values are valid.")
             return False
         
-        #the calc controller is responsible for actually creating the plot        
-        self.Mc_plot_figure = self.calc_controller.update_plot()
-        
-        #clears the canvas and packs the plot again
-        self.canvas.get_tk_widget().pack_forget()
-        self.canvas = matplotlib.backends.backend_tkagg.FigureCanvasTkAgg(self.Mc_plot_figure, master = self.plot_frame)
-        self.canvas.show()
-        self.canvas.get_tk_widget().pack()
-        self.canvas._tkcanvas.pack()
+        #updates the plot graphs
+        self.update_plot()
 
         #update the results calculation and values        
         self.update_results()
@@ -101,6 +110,10 @@ class PlotFrame:
     #updates the results labels
     def update_results(self):
         print("updating results")
+        
+        #call the calc controller to re-calculate Mc and the final results
+        self.calc_controller.solve_for_Mc()
+        self.calc_controller.calculate_results()
         
         #convert floating point numbers to two decimals
         Mc_str = "%.2f" % self.calc_controller.real_Mc
@@ -110,6 +123,31 @@ class PlotFrame:
         self.label_Mc.configure(text = Mc_str, fg = "green")
         self.label_r0.configure(text = r0_str, fg = "green")
         self.label_mesh_size.configure(text = mesh_str, fg = "green")
+    
+    #creates the plot figure but calls to the calculation controller to add the actual plot graphs
+    def update_plot(self):
+        
+       
+        #creates the matplotlib figure, figsize=(width, height) in unknown units
+        self.Mc_plot_figure = matplotlib.figure.Figure(figsize=(5, 3), dpi=100)
+        
+        Mc_plot = self.Mc_plot_figure.add_subplot(111)
+        Mc_plot.set_ylim([0,0.002])
+        
+        Mc_plot.set_xlabel('Mc [g/mol]')
+        Mc_plot.set_ylabel('1/Mc [mol/g]')
+        
+        self.calc_controller.add_graphs_to_plot(Mc_plot)
+        
+        self.Mc_plot_figure.set_tight_layout(True)
+        
+        #clears the canvas and packs the plot again
+        self.canvas.get_tk_widget().pack_forget()
+        self.canvas = matplotlib.backends.backend_tkagg.FigureCanvasTkAgg(self.Mc_plot_figure, master = self.plot_frame)
+        self.canvas.show()
+        self.canvas.get_tk_widget().pack()
+        self.canvas._tkcanvas.pack()
+        
 
 
     
