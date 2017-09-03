@@ -21,8 +21,8 @@ class VariableController:
         
         self.polymer_constant_variables = {"repeating unit MW" : var.Variable("repeating unit MW", "g/mol", 1.0, 1000000.0),
                                            "average bond length" : var.Variable("average bond length", "nm", 0.05, 10.0),
-                                           "characteristic ratio": var.Variable("characteristic ratio", " ? ", 0.1, 1000.0),
-                                           "Flory parameter" : var.Variable("Flory parameter", " ? ", 0.01, 1000.0),
+                                           "characteristic ratio": var.Variable("characteristic ratio", " - ", 0.1, 1000.0),
+                                           "Flory parameter" : var.Variable("Flory parameter", " - ", 0.01, 1000.0),
                                            "specific volume polymer" : var.Variable("specific volume polymer", "mL/g", 0.01, 100.0),
                                            "swelling agent molar volume" : var.Variable("swelling agent molar volume", "mL/mol", 0.1, 1000000.0)}
         
