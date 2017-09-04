@@ -82,6 +82,7 @@ class CalculationController:
         
         # the Mc used for calculations is the smallest value, because it can never be higher than the polymer arm molecular weight which is always a solution
         self.real_Mc = self.solutions_Mc[0]
+        self.var_controller.manual_Mc.entry.set(self.real_Mc)
      
         print("Mc solutions found (g/mol): " + str(self.solutions_Mc))
         print("using value " + str(self.real_Mc))

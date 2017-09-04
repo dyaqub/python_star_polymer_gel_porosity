@@ -36,7 +36,7 @@ class UIcontroller():
             self.input_blocks[title].main_frame.pack(fill = tk.X)
             
         # create the Mc solve plot and results subframe
-        self.plot_frame = plot_frame.PlotFrame(self.right_frame, self.calc_controller)
+        self.plot_frame = plot_frame.PlotFrame(self.right_frame, self.calc_controller, self.var_controller)
         self.plot_frame.main_frame.pack()
         
         # arranges the left and right frames in a grid layout

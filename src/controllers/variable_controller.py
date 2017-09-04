@@ -37,6 +37,8 @@ class VariableController:
         self.variable_dicts = {"Polymer Constants" : self.polymer_constant_variables,
                                "Network Architecture" : self.network_architecture_variables,
                                "Experimental Swelling" : self.experimental_swelling_variables}
+        
+        self.manual_Mc = var.Variable("molecular weight between crosslinks", "g/mol", 1, 10000000000)
     
     # validates the current entries (actual validation with error handling is done by variable class), and changes the labels accordingly (both value and color)
     # this method takes the variable_dict_title to find the variables, and a dictionary of status lable widgets so it can modify them without access to the UI

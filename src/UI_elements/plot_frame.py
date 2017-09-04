@@ -6,13 +6,14 @@ from tkinter import messagebox # required for messagebox to work, even with tkin
 # has access to the calculation controller from which the actual plot is retrieved (calc_controller has access to all variables and holds calculation methods)
 class PlotFrame:
     
-    def __init__(self, master, calc_controller):
+    def __init__(self, master, calc_controller, var_controller):
         print("initializing plot and results frame")
         
         matplotlib.rcParams.update({'font.size': 8}) # sets the font size for all matplotlib text. Note that the axes font size is later overriden and smaller
         
         self.master = master # tkinter root passed from UI controller
         self.calc_controller = calc_controller
+        self.var_controller = var_controller
         
         self.build_main_frame() # builds all sub-frames and pack them to the main frame, which in turn is packed by the UI controller
         
@@ -73,10 +74,10 @@ class PlotFrame:
         tk.Label(self.results_frame, text = "[nm]").grid(column = 2, row = 2)
         
         # the result labels are stored as attributes so they can be accessed and updated
-        self.label_Mc = tk.Label(self.results_frame)
+        self.entry_Mc = tk.Entry(self.results_frame, textvariable = self.var_controller.manual_Mc.entry)
         self.label_r0 = tk.Label(self.results_frame)
         self.label_mesh_size = tk.Label(self.results_frame)
-        self.label_Mc.grid(column = 1, row = 0)
+        self.entry_Mc.grid(column = 1, row = 0)
         self.label_r0.grid(column = 1, row = 1)
         self.label_mesh_size.grid(column = 1, row = 2)
         
@@ -134,6 +135,6 @@ class PlotFrame:
         self.calc_controller.calculate_results()
         
         # update the result labels, convert floating point numbers to strings with two decimals
-        self.label_Mc.configure(text = "%.2f" % self.calc_controller.real_Mc, fg = "green")
+        self.entry_Mc.configure(textvariable = self.var_controller.manual_Mc.entry)
         self.label_r0.configure(text = "%.2f" % self.calc_controller.r0_average, fg = "green")
         self.label_mesh_size.configure(text = "%.2f" % self.calc_controller.mesh_size, fg = "green")
