@@ -87,6 +87,16 @@ class CalculationController:
      
         print("Mc solutions found (g/mol): " + str(self.solutions_Mc))
         print("using value " + str(self.real_Mc))
+    
+    #update the manual entered Mc value only, and recalculate the results
+    def update_with_manual_Mc(self):
+        print("updating manual Mc and recalculting parameters")        
+        if self.var_controller.set_manual_Mc() and self.var_controller.manual_Mc_variables_valid():
+            self.real_Mc = self.var_controller.manual_Mc.value.get()     
+            self.load_variables()
+            self.calculate_results()
+        else:
+            print("interrupted updating and recalculating because of invalid Mc value")
         
     # calculate all other results after Mc is known. The most important result is mesh size but the r0 average end-to-end distance is calculated as well
     def calculate_results(self):

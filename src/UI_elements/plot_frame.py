@@ -139,18 +139,10 @@ class PlotFrame:
         
         self.update_result_labels()
         
-    #update the manuak entered Mc value only, and recalculate the results
-    #TODO: possibly move this to calculation controller, only call for manual Mc update and recalculation    
+    #call to the calc_controller to recalculate the results, then call to self to update the final result labels   
     def update_Mc_manual(self):
-        print("updating manual Mc and recalculting parameters")        
-        if self.var_controller.set_manual_Mc() and self.var_controller.manual_Mc_variables_valid():
-            self.calc_controller.real_Mc = self.var_controller.manual_Mc.value.get()     
-            self.calc_controller.load_variables()
-            self.calc_controller.calculate_results()
-            
-            self.update_result_labels()
-        else:
-            print("interrupted updating and recalculating because of invalid Mc value")
+        self.calc_controller.update_with_manual_Mc()
+        self.update_result_labels()
     
     # update the result labels, convert floating point numbers to strings with two decimals
     def update_result_labels(self):
