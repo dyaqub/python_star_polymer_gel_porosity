@@ -73,6 +73,7 @@ class PlotFrame:
         tk.Label(self.results_frame, text = "[nm]").grid(column = 2, row = 1)
         tk.Label(self.results_frame, text = "[nm]").grid(column = 2, row = 2)
         
+        
         # the result labels are stored as attributes so they can be accessed and updated
         self.entry_Mc = tk.Entry(self.results_frame, textvariable = self.var_controller.manual_Mc.entry)
         self.label_r0 = tk.Label(self.results_frame)
@@ -80,6 +81,8 @@ class PlotFrame:
         self.entry_Mc.grid(column = 1, row = 0)
         self.label_r0.grid(column = 1, row = 1)
         self.label_mesh_size.grid(column = 1, row = 2)
+        
+        tk.Button(self.results_frame, text = "calculate for manual Mc", command = self.update_Mc_manual).grid(column = 2, row = 0)
         
     # creates a matplotlib figure and adds an empty subplot to it
     def create_empty_Mc_plot(self):
@@ -134,7 +137,25 @@ class PlotFrame:
         self.calc_controller.solve_for_Mc()
         self.calc_controller.calculate_results()
         
-        # update the result labels, convert floating point numbers to strings with two decimals
+        self.update_result_labels()
+        
+    #update the manuak entered Mc value only, and recalculate the results
+    #TODO: possibly move this to calculation controller, only call for manual Mc update and recalculation    
+    def update_Mc_manual(self):
+        print("updating manual Mc and recalculting parameters")        
+        if self.var_controller.set_manual_Mc() and self.var_controller.manual_Mc_variables_valid():
+            self.calc_controller.real_Mc = self.var_controller.manual_Mc.value.get()     
+            self.calc_controller.load_variables()
+            self.calc_controller.calculate_results()
+            
+            self.update_result_labels()
+        else:
+            print("interrupted updating and recalculating because of invalid Mc value")
+    
+    # update the result labels, convert floating point numbers to strings with two decimals
+    def update_result_labels(self):
+        print("updating result labels")
         self.entry_Mc.configure(textvariable = self.var_controller.manual_Mc.entry)
         self.label_r0.configure(text = "%.2f" % self.calc_controller.r0_average, fg = "green")
         self.label_mesh_size.configure(text = "%.2f" % self.calc_controller.mesh_size, fg = "green")
+        

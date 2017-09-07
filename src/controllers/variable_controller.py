@@ -199,3 +199,29 @@ class VariableController:
         print("all variables valid")
         
         return True
+    
+    #transfers the value from the manual Mc entry field to the variable instance. Checks for validity. gets the entry field as a variable
+    def set_manual_Mc(self):        
+        print("checking validity of manual Mc input")
+        
+        if self.manual_Mc.valid_entry_input() and self.manual_Mc.value_in_bounds(self.manual_Mc.entry.get()):
+            print("setting manual Mc to " + str(self.manual_Mc.entry.get()))
+            self.manual_Mc.entry_to_value()
+            return True
+        else:
+            print("invalid manual Mc, cancelling update")
+            return False
+    
+    #checks if all the variables required for calculation with manual Mc are valid
+    def manual_Mc_variables_valid(self):
+        if not self.polymer_constant_variables["characteristic ratio"].valid_entry_input():
+            return False
+        if not self.polymer_constant_variables["repeating unit MW"].valid_entry_input():
+            return False
+        if not self.polymer_constant_variables["average bond length"].valid_entry_input():
+            return False
+        if not self.experimental_swelling_variables["polymer volume fraction equilibrium"].valid_entry_input():
+            return False       
+        
+        return True
+    
